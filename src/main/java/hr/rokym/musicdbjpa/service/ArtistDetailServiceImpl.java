@@ -1,56 +1,69 @@
 package hr.rokym.musicdbjpa.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import hr.rokym.musicdbjpa.dao.ArtistDetailDAO;
+import hr.rokym.musicdbjpa.dao.ArtistDetailRepository;
 import hr.rokym.musicdbjpa.entity.ArtistDetail;
 
 @Service
 public class ArtistDetailServiceImpl implements ArtistDetailService {
 
-	private ArtistDetailDAO artistDetailDAO;
+	private ArtistDetailRepository artistDetailRepository;
 	
 	@Autowired
-	public ArtistDetailServiceImpl(ArtistDetailDAO theArtistDetailDAO) {
-		artistDetailDAO = theArtistDetailDAO;
+	public ArtistDetailServiceImpl(ArtistDetailRepository artistDetailRepository) {
+		this.artistDetailRepository = artistDetailRepository;
 	}
 	
 	@Override
-	@Transactional
 	public List<ArtistDetail> findAll() {
 		
-		return artistDetailDAO.findAll();
+		return artistDetailRepository.findAll();
 	}
 
 
 
 	@Override
-	@Transactional
 	public ArtistDetail findById(int theId) {
 		
-		return artistDetailDAO.findById(theId);
+		Optional<ArtistDetail> result = artistDetailRepository.findById(theId);
+		
+		ArtistDetail detail = null;
+		if (result.isPresent()) {
+			detail = result.get();
+		}
+		else {
+			throw new RuntimeException("Did not found detail");
+		}
+		return detail;
 	}
 
 	@Override
-	@Transactional
 	public void save(ArtistDetail theArtistDetail) {
 		
-		artistDetailDAO.save(theArtistDetail);
+		artistDetailRepository.save(theArtistDetail);
 
 	}
 
 	@Override
-	@Transactional
 	public void deleteById(int theId) {
 		
-		artistDetailDAO.deleteById(theId);
+		artistDetailRepository.deleteById(theId);
 	}
-	
-	
-	
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

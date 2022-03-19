@@ -1,50 +1,56 @@
 package hr.rokym.musicdbjpa.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import hr.rokym.musicdbjpa.dao.SongDAO;
+import hr.rokym.musicdbjpa.dao.SongRepository;
 import hr.rokym.musicdbjpa.entity.Song;
 
 @Service
 public class SongServiceImpl implements SongService {
 
-	private SongDAO songDAO;
+	private SongRepository songRepository;
 	
 	@Autowired
-	public SongServiceImpl(SongDAO songDAO) {
-		this.songDAO = songDAO;
+	public SongServiceImpl(SongRepository songRepository) {
+		this.songRepository = songRepository;
 	}
 	
 	@Override
-	@Transactional
 	public List<Song> findAll() {
 	
-		return songDAO.findAll();
+		return songRepository.findAll();
 	}
 
 	@Override
-	@Transactional
 	public Song findById(int id) {
 
-		return songDAO.findById(id);
+		Optional<Song> result = songRepository.findById(id);
+		
+		Song song = null;
+		
+		if (result.isPresent()) {
+			song = result.get();
+		}
+		else {
+			throw new RuntimeException("Didi not found song id");
+		}
+		
+		return song;
 	}
 
 	@Override
-	@Transactional
 	public void save(Song song) {
 
-		songDAO.save(song);
+		songRepository.save(song);
 	}
 
 	@Override
-	@Transactional
 	public void deleteById(int id) {
 		
-		songDAO.deleteById(id);
+		songRepository.deleteById(id);
 	}
 }
 
